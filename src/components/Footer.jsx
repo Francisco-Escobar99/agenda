@@ -2,16 +2,15 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div>
-      <nav className='navbar navbar-dark bg-dark '> 
-        <div className='container-fluid'>
-            <p className='navbar-brand h1'>
-                {" "}
-                Escobar - &copy; creado en {new Date().getFullYear()}{" "}
-            </p>
-        </div>
-      </nav>  
-    </div>
+    <footer className="app-footer">
+      <div className="footer-inner">
+        <span>Hecho por Escobar</span>
+        <span className="footer-dot" aria-hidden="true"></span>
+        <span>© {new Date().getFullYear()}</span>
+        <span className="footer-dot" aria-hidden="true"></span>
+        <span>Agenda de Contactos</span>
+      </div>
+    </footer>
   )
 }
 

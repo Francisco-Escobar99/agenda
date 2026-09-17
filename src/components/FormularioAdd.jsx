@@ -1,75 +1,105 @@
 import React, { useState, useEffect } from 'react'
-import {v4 as uuid} from "uuid" //genera un id aleatorio
+import { v4 as uuid } from 'uuid'
 
-const FormularioAdd = ({dispatch, contactoEditar = null, setContactoEditar }) => {
-  const [data, setData] = useState({nombre: "", numero: ""});
+const FormularioAdd = ({ dispatch, contactoEditar = null, setContactoEditar, onClose }) => {
+  const [data, setData] = useState({ nombre: '', numero: '' })
 
   useEffect(() => {
     if (contactoEditar) {
-      setData(contactoEditar);
+      setData(contactoEditar)
     }
-  }, [contactoEditar]);
+  }, [contactoEditar])
 
-  const {nombre, numero} = data;
+  const { nombre, numero } = data
 
-  const handleChange =(e) =>{
+  const handleChange = (e) => {
     setData({
       ...data,
-      [e.target.name]:e.target.value
-  })
-  };
+      [e.target.name]: e.target.value,
+    })
+  }
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!nombre.trim() || !numero.trim()) return
+
     if (contactoEditar) {
-      // Acción para actualizar
-      dispatch({
-        type: "update",
-        payload: { id: contactoEditar.id, data }
-      });
-      setContactoEditar(null);
+      dispatch({ type: 'update', payload: { id: contactoEditar.id, data } })
+      setContactoEditar(null)
     } else {
-      // Acción para agregar
-      dispatch({
-        type: "add",
-        payload: {
-          id: uuid(),
-          nombre,
-          numero,
-        }
-      });
+      dispatch({ type: 'add', payload: { id: uuid(), nombre, numero } })
     }
+    setData({ nombre: '', numero: '' })
+    if (onClose) onClose()
+  }
 
-    setData({ nombre: '', numero: '' });
-  };
+  const isEditing = !!contactoEditar
 
   return (
-    <>
-    <div className='container'>
-        <label className='mx-1 d-grid gap-2'>
-            Nombre y primer apellido: {" "} 
-            <input 
-            onChange={handleChange} 
-            name ="nombre" type='text'
-            value={nombre} 
-            className='form-control w-50' 
-            autoComplete='off'></input>
-        </label>
-        <label className='mx-1 d-grid gap-2'>
-            Telefono (celular): {" "} 
-            <input onChange={handleChange}  
-            name ="numero" type='text' 
-            value={numero} 
-            className='form-control w-50' 
-            autoComplete='off'></input>
-        </label>
-        <div className='mx-1 d-grid gap-2'>
-        <button onClick={handleSubmit} className='btn btn-info mt-3 mb-5' style={{ width: '150px' }}>
-          {contactoEditar ? "Guardar cambio" : "Agregar"}
-        </button>
-      </div>
+    <div className="form-card" role="form" aria-label={isEditing ? 'Editar contacto' : 'Agregar contacto'}>
+      <h2 className="form-card-title">
+        <span>{isEditing ? '✏️' : '➕'}</span>
+        {isEditing ? 'Editar contacto' : 'Nuevo contacto'}
+      </h2>
+      <form onSubmit={handleSubmit} noValidate>
+        <div className="form-grid">
+          <div className="form-group">
+            <label className="form-label" htmlFor="nombre">
+              Nombre y apellido
+            </label>
+            <input
+              id="nombre"
+              className="form-input"
+              onChange={handleChange}
+              name="nombre"
+              type="text"
+              value={nombre}
+              placeholder="Ej. María García"
+              autoComplete="off"
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label className="form-label" htmlFor="numero">
+              Teléfono celular
+            </label>
+            <input
+              id="numero"
+              className="form-input"
+              onChange={handleChange}
+              name="numero"
+              type="tel"
+              value={numero}
+              placeholder="Ej. +52 55 1234 5678"
+              autoComplete="off"
+              required
+            />
+          </div>
+        </div>
+        <div className="form-actions">
+          <button
+            id="btn-submit-contact"
+            type="submit"
+            className={`btn ${isEditing ? 'btn-warning' : 'btn-success'}`}
+          >
+            {isEditing ? '💾 Guardar cambios' : '✓ Agregar contacto'}
+          </button>
+          <button
+            id="btn-cancel-form"
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              setData({ nombre: '', numero: '' })
+              if (isEditing) setContactoEditar(null)
+              if (onClose) onClose()
+            }}
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
     </div>
-    </>
   )
 }
 
-export default FormularioAdd;
+export default FormularioAdd
