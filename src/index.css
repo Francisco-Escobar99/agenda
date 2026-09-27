@@ -427,70 +427,101 @@ body {
 }
 
 /* ==========================================
-   CONTACTS TABLE
+   CONTACTS GRID (Premium Cards)
    ========================================== */
-.table-wrapper {
+.contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.contact-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
   overflow: hidden;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all var(--transition-slow);
+  box-shadow: var(--shadow-sm);
+  animation: fadeIn 0.4s ease forwards;
 }
 
-.contacts-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.875rem;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.contacts-table thead {
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid var(--border);
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  opacity: 0;
+  transition: opacity var(--transition);
 }
 
-.contacts-table thead th {
-  padding: 0.9rem 1.1rem;
-  text-align: left;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
-.contacts-table tbody tr {
-  border-bottom: 1px solid var(--border);
-  transition: background var(--transition);
-}
-
-.contacts-table tbody tr:last-child {
-  border-bottom: none;
-}
-
-.contacts-table tbody tr:hover {
+.contact-card:hover {
+  transform: translateY(-4px);
   background: var(--bg-card-hover);
+  border-color: rgba(108, 99, 255, 0.3);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
 }
 
-.contacts-table td,
-.contacts-table tbody th {
-  padding: 0.95rem 1.1rem;
-  vertical-align: middle;
+.contact-card:hover::before {
+  opacity: 1;
 }
 
-/* ID badge */
-.id-badge {
-  display: inline-flex;
+.contact-card-header {
+  display: flex;
   align-items: center;
-  background: var(--accent-light);
-  color: var(--accent-secondary);
+  gap: 1rem;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.contact-id {
   font-size: 0.7rem;
-  font-weight: 700;
+  color: var(--text-muted);
   font-family: 'Inter', monospace;
-  padding: 0.2rem 0.55rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(108, 99, 255, 0.2);
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.contact-card-body {
+  padding: 0.5rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.contact-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+/* ID badge (kept for legacy or if needed elsewhere) */
+.id-badge {
+  display: none;
 }
 
 /* Contact name */
@@ -519,12 +550,17 @@ body {
 
 /* Phone number */
 .contact-phone {
-  color: var(--text-secondary);
+  color: var(--text-primary);
   font-variant-numeric: tabular-nums;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.95rem;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .phone-icon {
